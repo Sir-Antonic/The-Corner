@@ -1,8 +1,8 @@
 // ---- CONFIG -----------------------------------------------------------
-const COUNTER_NAMESPACE = "your-workspace-slug"; // <-- replace me, see README
+const COUNTER_NAMESPACE = "move-downloads"; // <-- replace me, see README
 const COUNTER_API_BASE = "https://api.counterapi.dev/v1";
-const LOCAL_FALLBACK_KEY = "move-hub-download-counts";
-const FAVORITES_KEY = "move-hub-favorites";
+const LOCAL_FALLBACK_KEY = "download-counts";
+const FAVORITES_KEY = "favorites";
 
 // Download thresholds that decide a tile's rank. Tune to your own numbers.
 const RANK_THRESHOLDS = { legend: 150, champion: 50, pro: 15 };
