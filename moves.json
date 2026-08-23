@@ -35,66 +35,6 @@
       "counterId": "630",
       "wrestlerImage": "assets/photos/pose-flex.svg",
       "previewWebm": "assets/clips/spinning-piledriver-demo.webm"
-    },
-    {
-      "id": "german-suplex-hold",
-      "name": "German Suplex Hold",
-      "category": "Back Strong Grapple",
-      "author": "@retrorandy",
-      "preview": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "",
-      "download": "assets/downloads/german-suplex-hold.zip",
-      "notes": "Bridging pin included on landing.",
-      "counterId": "german-suplex-hold",
-      "wrestlerImage": "assets/photos/pose-grapple.svg"
-    },
-    {
-      "id": "corner-mount-punches",
-      "name": "Corner Mount Punches",
-      "category": "Corner",
-      "author": "@retrorandy",
-      "preview": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "",
-      "download": "assets/downloads/corner-mount-punches.zip",
-      "notes": "10-punch count-along, referee break compatible.",
-      "counterId": "corner-mount-punches",
-      "wrestlerImage": "assets/photos/pose-aerial.svg"
-    },
-    {
-      "id": "shooting-star-press",
-      "name": "Shooting Star Press",
-      "category": "Diving",
-      "author": "@retrorandy",
-      "preview": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "",
-      "download": "assets/downloads/shooting-star-press.zip",
-      "notes": "Top-rope only. Adjusted arc for AKI physics.",
-      "counterId": "shooting-star-press",
-      "wrestlerImage": "assets/photos/pose-flex.svg"
-    },
-    {
-      "id": "ground-elbow-drop",
-      "name": "Ground Elbow Drop",
-      "category": "Ground Attack",
-      "author": "@retrorandy",
-      "preview": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "",
-      "download": "assets/downloads/ground-elbow-drop.zip",
-      "notes": "Works on front and back down states.",
-      "counterId": "ground-elbow-drop",
-      "wrestlerImage": "assets/photos/pose-grapple.svg"
-    },
-    {
-      "id": "curb-stomp-finisher",
-      "name": "Curb Stomp",
-      "category": "Signature / Finisher",
-      "author": "@retrorandy",
-      "preview": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "",
-      "download": "assets/downloads/curb-stomp-finisher.zip",
-      "notes": "Custom finish camera angle included.",
-      "counterId": "curb-stomp-finisher",
-      "wrestlerImage": "assets/photos/pose-aerial.svg"
     }
   ]
 }
