@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE MOVE HUB // ROSTER SELECT</title>
+<meta name="description" content="Custom moveset archive for WWF No Mercy, built with the Animation Tool. Select a move, preview it, download it.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzA1MDUwNSIvPgo8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U4MjMyZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjllMGU4IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8dGV4dCB4PSIzMiIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIyNiIgZmlsbD0iI2YyZjJmMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TTwvdGV4dD4KPC9zdmc+">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="THE MOVE HUB // ROSTER SELECT">
+<meta property="og:description" content="Custom moveset archive for WWF No Mercy. Select a move, preview it, download it.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="THE MOVE HUB // ROSTER SELECT">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+
+<div class="hud-corner hud-corner--tl" aria-hidden="true"></div>
+<div class="hud-corner hud-corner--tr" aria-hidden="true"></div>
+<div class="hud-corner hud-corner--bl" aria-hidden="true"></div>
+<div class="hud-corner hud-corner--br" aria-hidden="true"></div>
+
+<header class="hero">
+  <p class="hero__eyebrow">// CUSTOM MOVESET ARCHIVE — AKI ANIMATION TOOL</p>
+  <h1 class="hero__title">ROSTER<span class="hero__title-accent">SELECT</span></h1>
+  <p class="hero__sub">Hand-built moves for the AKI engine. Pick one, preview it, take it to your card.</p>
+  <div class="hero__hud">
+    <span>MOVES <strong id="stat-total">00</strong></span>
+    <span class="hero__hud-sep">//</span>
+    <span>DOWNLOADS <strong id="stat-downloads">00</strong></span>
+  </div>
+  <button class="hero__info-btn" id="rarity-info-btn">RANK GUIDE ▸</button>
+</header>
+
+<div class="controls">
+  <input type="search" id="move-search" class="controls__search" placeholder="SEARCH MOVES…" aria-label="Search moves by name">
+  <select id="move-sort" class="controls__sort" aria-label="Sort moves">
+    <option value="featured">FEATURED</option>
+    <option value="downloads">MOST DOWNLOADED</option>
+    <option value="az">A–Z</option>
+  </select>
+  <button class="controls__fav-toggle" id="fav-toggle" aria-pressed="false">
+    ★ FAVORITES <span id="fav-toggle-count">(0)</span>
+  </button>
+</div>
+
+<nav class="ticker" id="category-ticker" aria-label="Filter by move category">
+  <button class="ticker__tab is-active" data-category="all">ALL</button>
+</nav>
+
+<main class="grid" id="move-grid" aria-live="polite"></main>
+<div class="load-more-wrap" id="load-more-wrap">
+  <button class="load-more" id="load-more-btn"></button>
+</div>
+
+<div class="modal" id="move-modal" aria-hidden="true">
+  <div class="modal__backdrop" id="modal-backdrop"></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal__close" id="modal-close" aria-label="Close">✕</button>
+    <div class="modal__screen">
+      <video class="modal__video" id="modal-video" controls loop muted playsinline></video>
+      <span class="modal__rec" id="modal-rec">● REC</span>
+      <span class="modal__type" id="modal-category"></span>
+    </div>
+    <div class="modal__body">
+      <div class="modal__titlerow">
+        <h2 class="modal__title" id="modal-title"></h2>
+        <button class="modal__fav" id="modal-fav" aria-pressed="false" aria-label="Toggle favorite">☆</button>
+      </div>
+      <p class="modal__rank" id="modal-rarity"></p>
+      <p class="modal__notes" id="modal-notes"></p>
+      <div class="modal__footer">
+        <span class="modal__author" id="modal-author"></span>
+        <span class="modal__number" id="modal-number"></span>
+      </div>
+      <div class="modal__actions">
+        <a class="btn-download" id="modal-download" href="#" download>
+          <span>PRESS START TO DOWNLOAD</span> <span class="btn-download__count" id="modal-count">0</span>
+        </a>
+        <button class="btn-copy" id="modal-copy" aria-label="Copy link to this move">🔗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="info-modal" id="rarity-modal" aria-hidden="true">
+  <div class="info-modal__backdrop" id="rarity-modal-backdrop"></div>
+  <div class="info-modal__panel" role="dialog" aria-modal="true" aria-labelledby="rarity-modal-title">
+    <button class="info-modal__close" id="rarity-modal-close" aria-label="Close">✕</button>
+    <h3 id="rarity-modal-title">RANK GUIDE</h3>
+    <p class="info-modal__intro">Every move starts at ROOKIE and ranks up automatically the more it's downloaded.</p>
+    <ul class="rarity-legend" id="rarity-legend-list"></ul>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>MOVES BUILT WITH THE ANIMATION TOOL — WWF NO MERCY</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

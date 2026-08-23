@@ -1,0 +1,24 @@
+<svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="spot1" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#2a2a35"/>
+      <stop offset="100%" stop-color="#0a0a0d"/>
+    </radialGradient>
+    <linearGradient id="rim1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a4a58"/>
+      <stop offset="100%" stop-color="#16161c"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="560" fill="url(#spot1)"/>
+  <!-- stylized standing figure, arms crossed / flexed, geometric silhouette -->
+  <g fill="url(#rim1)">
+    <ellipse cx="200" cy="150" rx="52" ry="60"/>
+    <path d="M140 210 Q200 190 260 210 L275 340 Q200 375 125 340 Z"/>
+    <path d="M120 225 Q80 260 70 330 Q95 345 115 320 Q125 270 140 235 Z"/>
+    <path d="M280 225 Q320 260 330 330 Q305 345 285 320 Q275 270 260 235 Z"/>
+    <path d="M150 350 Q140 450 130 540 L175 540 Q180 450 185 355 Z"/>
+    <path d="M250 350 Q260 450 270 540 L225 540 Q220 450 215 355 Z"/>
+  </g>
+  <ellipse cx="200" cy="150" rx="52" ry="60" fill="none" stroke="#f4d68a" stroke-width="1.5" opacity="0.35"/>
+  <rect x="0" y="0" width="400" height="560" fill="url(#spot1)" opacity="0.15"/>
+</svg>

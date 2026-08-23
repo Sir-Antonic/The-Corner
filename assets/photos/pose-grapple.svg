@@ -1,0 +1,23 @@
+<svg viewBox="0 0 400 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="spot2" cx="55%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#2a2a35"/>
+      <stop offset="100%" stop-color="#0a0a0d"/>
+    </radialGradient>
+    <linearGradient id="rim2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a4a58"/>
+      <stop offset="100%" stop-color="#16161c"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="560" fill="url(#spot2)"/>
+  <!-- stylized lunging / grapple-stance figure, geometric silhouette -->
+  <g fill="url(#rim2)">
+    <ellipse cx="230" cy="140" rx="48" ry="55" transform="rotate(-12 230 140)"/>
+    <path d="M160 195 Q235 175 290 210 L300 320 Q210 350 145 305 Z"/>
+    <path d="M155 210 Q95 220 60 270 Q80 295 110 280 Q135 250 165 225 Z"/>
+    <path d="M290 200 Q345 195 375 235 Q360 265 330 255 Q305 230 280 215 Z"/>
+    <path d="M170 320 Q120 380 90 460 Q115 480 140 460 Q165 400 195 335 Z"/>
+    <path d="M250 320 Q280 400 300 480 L340 465 Q320 390 285 315 Z"/>
+  </g>
+  <ellipse cx="230" cy="140" rx="48" ry="55" transform="rotate(-12 230 140)" fill="none" stroke="#f4d68a" stroke-width="1.5" opacity="0.35"/>
+</svg>
