@@ -24,15 +24,15 @@
   ],
   "moves": [
     {
-      "id": "spinning-piledriver",
-      "name": "Spinning Piledriver",
-      "category": "Front Strong Grapple",
-      "author": "@retrorandy",
+      "id": "630",
+      "name": "Puma's 630 WIP",
+      "category": "Diving Attacks to Grounded Opponenet",
+      "author": "@rSirAntonic",
       "preview": "assets/clips/spinning-piledriver-demo.mp4",
       "poster": "",
       "download": "assets/downloads/spinning-piledriver.zip",
-      "notes": "Full rotation before the drop. Built with the Animation Tool's grapple rig.",
-      "counterId": "spinning-piledriver",
+      "notes": "Puma's 630",
+      "counterId": "630",
       "wrestlerImage": "assets/photos/pose-flex.svg",
       "previewWebm": "assets/clips/spinning-piledriver-demo.webm"
     },
