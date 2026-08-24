@@ -25,16 +25,17 @@
   "moves": [
     {
       "id": "630",
-      "name": "Puma's 630 WIP",
+      "name": "Prince Puma's 630 WIP",
       "category": "Diving Attacks to Grounded Opponent",
       "author": "@SirAntonic",
       "preview": "assets/clips/spinning-piledriver-demo.mp4",
       "poster": "",
       "download": "assets/downloads/spinning-piledriver.zip",
-      "notes": "Puma's 630",
+      "notes": "Prince Puma's 630",
       "counterId": "630",
       "wrestlerImage": "assets/photos/puma.jpg",
-      "previewWebm": "assets/clips/spinning-piledriver-demo.webm"
+      "previewWebm": "assets/clips/spinning-piledriver-demo.webm",
+      "wrestler": "Prince Puma"
     }
   ]
 }

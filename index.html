@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE Corner</title>
+<title>THE CORNER</title>
 <meta name="description" content="Custom moveset archive for WWF No Mercy, built with the Animation Tool. Select a move, preview it, download it.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+CjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzA1MDUwNSIvPgo8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2U4MjMyZiIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxyZWN0IHg9IjgiIHk9IjgiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjllMGU4IiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8dGV4dCB4PSIzMiIgeT0iNDIiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjkwMCIgZm9udC1zaXplPSIyNiIgZmlsbD0iI2YyZjJmMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TTwvdGV4dD4KPC9zdmc+">
 
@@ -29,10 +29,10 @@
 
 <header class="hero">
   <p class="hero__eyebrow">// CUSTOM MOVES ARCHIVE — SIRANTONIC</p>
-  <h1 class="hero__title">THE<span class="hero__title-accent">CORNER</span></h1>
-  <p class="hero__sub">Hand-built moves for the AKI engine. Select a move, preview it, download it.</p>
+  <h1 class="hero__title">THE <span class="hero__title-accent">CORNER</span></h1>
+  <p class="hero__sub">Hand-built moves for the AKI engine. Pick one, preview it, take it to the game.</p>
   <div class="hero__hud">
-    <span>CUSTOM MOVES <strong id="stat-total">00</strong></span>
+    <span>MOVES <strong id="stat-total">00</strong></span>
     <span class="hero__hud-sep">//</span>
     <span>DOWNLOADS <strong id="stat-downloads">00</strong></span>
   </div>
@@ -41,19 +41,23 @@
 
 <div class="controls">
   <input type="search" id="move-search" class="controls__search" placeholder="SEARCH MOVES…" aria-label="Search moves by name">
+  <select id="category-select" class="controls__select" aria-label="Filter by category">
+    <option value="all">ALL CATEGORIES</option>
+  </select>
+  <select id="wrestler-select" class="controls__select" aria-label="Filter by wrestler">
+    <option value="all">ALL WRESTLERS</option>
+  </select>
   <select id="move-sort" class="controls__sort" aria-label="Sort moves">
     <option value="featured">FEATURED</option>
     <option value="downloads">MOST DOWNLOADED</option>
     <option value="az">A–Z</option>
+    <option value="wrestler">WRESTLER A–Z</option>
   </select>
   <button class="controls__fav-toggle" id="fav-toggle" aria-pressed="false">
     ★ FAVORITES <span id="fav-toggle-count">(0)</span>
   </button>
 </div>
-
-<nav class="ticker" id="category-ticker" aria-label="Filter by move category">
-  <button class="ticker__tab is-active" data-category="all">ALL</button>
-</nav>
+<p class="controls__count" id="results-count"></p>
 
 <main class="grid" id="move-grid" aria-live="polite"></main>
 <div class="load-more-wrap" id="load-more-wrap">
@@ -66,7 +70,7 @@
     <button class="modal__close" id="modal-close" aria-label="Close">✕</button>
     <div class="modal__screen">
       <video class="modal__video" id="modal-video" controls loop muted playsinline></video>
-      <span class="modal__rec" id="modal-rec">● NEW</span>
+      <span class="modal__rec" id="modal-rec">● REC</span>
       <span class="modal__type" id="modal-category"></span>
     </div>
     <div class="modal__body">
@@ -74,6 +78,7 @@
         <h2 class="modal__title" id="modal-title"></h2>
         <button class="modal__fav" id="modal-fav" aria-pressed="false" aria-label="Toggle favorite">☆</button>
       </div>
+      <p class="modal__wrestler" id="modal-wrestler"></p>
       <p class="modal__rank" id="modal-rarity"></p>
       <p class="modal__notes" id="modal-notes"></p>
       <div class="modal__footer">
@@ -82,7 +87,7 @@
       </div>
       <div class="modal__actions">
         <a class="btn-download" id="modal-download" href="#" download>
-          <span>DOWNLOAD</span> <span class="btn-download__count" id="modal-count">0</span>
+          <span>PRESS START TO DOWNLOAD</span> <span class="btn-download__count" id="modal-count">0</span>
         </a>
         <button class="btn-copy" id="modal-copy" aria-label="Copy link to this move">🔗</button>
       </div>

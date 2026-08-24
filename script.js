@@ -1,8 +1,8 @@
 // ---- CONFIG -----------------------------------------------------------
-const COUNTER_NAMESPACE = "move-downloads"; // <-- replace me, see README
+const COUNTER_NAMESPACE = "your-workspace-slug"; // <-- replace me, see README
 const COUNTER_API_BASE = "https://api.counterapi.dev/v1";
-const LOCAL_FALLBACK_KEY = "download-counts";
-const FAVORITES_KEY = "favorites";
+const LOCAL_FALLBACK_KEY = "move-hub-download-counts";
+const FAVORITES_KEY = "move-hub-favorites";
 
 // Download thresholds that decide a tile's rank. Tune to your own numbers.
 const RANK_THRESHOLDS = { legend: 150, champion: 50, pro: 15 };
@@ -11,25 +11,16 @@ const PAGE_SIZE = 12;
 // indicator — every other post has none at all, not even on hover.
 const RECENT_REC_COUNT = 5;
 
-const CATEGORY_PALETTE = [
-  "#e8232f", // Front Strong Grapple — red
-  "#f2894a", // Back Strong Grapple — orange
-  "#f2c14e", // Front Weak Grapple — amber
-  "#3ddc84", // Back Weak Grapple — green
-  "#29e0e8", // Corner — cyan
-  "#4d8ff0", // Ground Attack — blue
-  "#9b6fe0", // Running — violet
-  "#ef4fa3", // Diving — magenta
-  "#ffcc33", // Signature / Finisher — gold
-  "#2fd9c4", // Taunt — teal
-  "#b877f0", // overflow — purple
-  "#6ec6b0"  // overflow — mint
-];
+// Every category now shares one neutral accent color instead of a
+// different hue per category — kept as a function so the rest of the
+// code (which reads --accent everywhere) didn't need to change.
+const NEUTRAL_ACCENT = "#f2f2ef";
 
 // ---- STATE --------------------------------------------------------------
 let allMoves = [];
 let categories = [];
 let activeCategory = "all";
+let activeWrestler = "all";
 let searchQuery = "";
 let sortBy = "featured";
 let showFavoritesOnly = false;
@@ -90,9 +81,8 @@ function updateFavToggleLabel() {
 }
 
 // ---- RANK / STYLE HELPERS -----------------------------------------------
-function getCategoryAccent(category) {
-  const i = categories.indexOf(category);
-  return CATEGORY_PALETTE[(i < 0 ? 0 : i) % CATEGORY_PALETTE.length];
+function getCategoryAccent() {
+  return NEUTRAL_ACCENT;
 }
 function getRankTier(count) {
   if (count >= RANK_THRESHOLDS.legend) return "legend";
@@ -142,23 +132,37 @@ document.getElementById("rarity-modal-close").addEventListener("click", closeRar
 document.getElementById("rarity-modal-backdrop").addEventListener("click", closeRarityModal);
 
 // ---- RENDERING ------------------------------------------------------------
-function renderTicker() {
-  const ticker = document.getElementById("category-ticker");
-  const countFor = (cat) => cat === "all" ? allMoves.length : allMoves.filter((m) => m.category === cat).length;
-  ticker.innerHTML = `<button class="ticker__tab is-active" data-category="all">ALL (${countFor("all")})</button>`;
+function renderFilterDropdowns() {
+  const catCountFor = (cat) => cat === "all" ? allMoves.length : allMoves.filter((m) => m.category === cat).length;
+  const catSelect = document.getElementById("category-select");
+  catSelect.innerHTML = `<option value="all">ALL CATEGORIES (${catCountFor("all")})</option>`;
   categories.forEach((cat) => {
-    const btn = document.createElement("button");
-    btn.className = "ticker__tab";
-    btn.dataset.category = cat;
-    btn.textContent = `${cat.toUpperCase()} (${countFor(cat)})`;
-    ticker.appendChild(btn);
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = `${cat.toUpperCase()} (${catCountFor(cat)})`;
+    catSelect.appendChild(opt);
   });
-  ticker.addEventListener("click", (e) => {
-    const btn = e.target.closest(".ticker__tab");
-    if (!btn) return;
-    activeCategory = btn.dataset.category;
+  catSelect.addEventListener("change", (e) => {
+    activeCategory = e.target.value;
     currentPage = 1;
-    [...ticker.children].forEach((c) => c.classList.toggle("is-active", c === btn));
+    renderGrid();
+  });
+
+  const wrestlers = [...new Set(allMoves.map((m) => m.wrestler).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  const wrestlerCountFor = (w) => allMoves.filter((m) => m.wrestler === w).length;
+  const wrestlerSelect = document.getElementById("wrestler-select");
+  wrestlerSelect.innerHTML = `<option value="all">ALL WRESTLERS (${allMoves.length})</option>`;
+  wrestlers.forEach((w) => {
+    const opt = document.createElement("option");
+    opt.value = w;
+    opt.textContent = `${w.toUpperCase()} (${wrestlerCountFor(w)})`;
+    wrestlerSelect.appendChild(opt);
+  });
+  wrestlerSelect.addEventListener("change", (e) => {
+    activeWrestler = e.target.value;
+    currentPage = 1;
     renderGrid();
   });
 }
@@ -184,16 +188,26 @@ async function renderGrid() {
 
   let visible = allMoves.filter((m) =>
     (activeCategory === "all" || m.category === activeCategory) &&
+    (activeWrestler === "all" || m.wrestler === activeWrestler) &&
     (!showFavoritesOnly || favorites.has(m.id)) &&
     (query === "" || m.name.toLowerCase().includes(query))
   );
 
   if (sortBy === "az") {
     visible = [...visible].sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "wrestler") {
+    visible = [...visible].sort((a, b) => (a.wrestler || "").localeCompare(b.wrestler || ""));
   } else if (sortBy === "downloads") {
     const counts = await Promise.all(visible.map((m) => fetchCount(m.counterId)));
     visible = visible.map((m, i) => ({ m, c: counts[i] })).sort((a, b) => b.c - a.c).map((x) => x.m);
   }
+
+  const resultsCount = document.getElementById("results-count");
+  const moveWord = (n) => (n === 1 ? "MOVE" : "MOVES");
+  resultsCount.textContent =
+    visible.length === allMoves.length
+      ? `${allMoves.length} ${moveWord(allMoves.length)}`
+      : `SHOWING ${visible.length} OF ${allMoves.length} ${moveWord(allMoves.length)}`;
 
   if (!visible.length) {
     document.getElementById("load-more-wrap").style.display = "none";
@@ -231,7 +245,7 @@ async function renderGrid() {
       <div class="tile__frame">
         <div class="tile__screen">
           <video muted loop playsinline preload="metadata">${move.previewWebm ? `<source src="${move.previewWebm}" type="video/webm">` : ""}<source src="${move.preview}" type="video/mp4"></video>
-          ${isRecent ? `<span class="tile__rec tile__rec--live">● NEW</span>` : ""}
+          ${isRecent ? `<span class="tile__rec tile__rec--live">● REC</span>` : ""}
           <img class="tile__portrait" src="${move.wrestlerImage}" alt="" />
           <button class="tile__fav ${isFav ? "is-active" : ""}" aria-pressed="${isFav}" aria-label="Toggle favorite">${isFav ? "★" : "☆"}</button>
         </div>
@@ -240,6 +254,7 @@ async function renderGrid() {
             <span class="tile__name">${move.name}</span>
             <span class="tile__rank"></span>
           </div>
+          ${move.wrestler ? `<p class="tile__wrestler">${move.wrestler}</p>` : ""}
           <div class="tile__metarow">
             <span class="tile__type">${move.category}</span>
             <span class="tile__stat">↓ <strong class="is-loading" data-count-for="${move.counterId}"></strong></span>
@@ -303,6 +318,7 @@ async function openModal(move, { updateUrl = true } = {}) {
 
   document.getElementById("modal-category").textContent = move.category;
   document.getElementById("modal-title").textContent = move.name;
+  document.getElementById("modal-wrestler").textContent = move.wrestler || "";
   document.getElementById("modal-notes").textContent = move.notes || "";
   const modalRec = document.getElementById("modal-rec");
   const moveIsRecent = isRecentMove(move.id);
@@ -365,6 +381,15 @@ async function openModal(move, { updateUrl = true } = {}) {
   });
 
   downloadBtn.onclick = async () => {
+    const screenEl = document.querySelector(".modal__screen");
+    if (screenEl) {
+      screenEl.classList.remove("is-glitching");
+      // force reflow so the animation restarts even if clicked again quickly
+      void screenEl.offsetWidth;
+      screenEl.classList.add("is-glitching");
+      setTimeout(() => screenEl.classList.remove("is-glitching"), 650);
+    }
+
     const newCount = await incrementCount(move.counterId);
     const tier = getRankTier(newCount);
     countEl.textContent = newCount;
@@ -440,7 +465,7 @@ async function init() {
   const data = await res.json();
   allMoves = data.moves;
   categories = data.categories;
-  renderTicker();
+  renderFilterDropdowns();
   updateFavToggleLabel();
   renderRankLegend();
   await renderGrid();

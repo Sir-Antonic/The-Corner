@@ -1,4 +1,5 @@
 :root {
+  --vhs-noise: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj4KPGZpbHRlciBpZD0ibiI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuODUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAxICAwIDAgMCAwIDEgIDAgMCAwIDAgMSAgMCAwIDAgMC41IDAiLz48L2ZpbHRlcj4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI24pIi8+Cjwvc3ZnPg==");
   --void: #050506;
   --panel: #0d0d10;
   --panel-2: #141418;
@@ -121,11 +122,11 @@ body {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  max-width: 720px;
+  max-width: 860px;
   margin: 0 auto;
   padding: 0 24px 18px;
 }
-.controls__search, .controls__sort {
+.controls__search, .controls__sort, .controls__select {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 13px;
@@ -140,8 +141,16 @@ body {
 }
 .controls__search { flex: 1; min-width: 160px; }
 .controls__search::placeholder { color: var(--dim-2); }
-.controls__search:focus, .controls__sort:focus { border-color: var(--cyan); }
-.controls__sort { cursor: pointer; flex-shrink: 0; }
+.controls__search:focus, .controls__sort:focus, .controls__select:focus { border-color: var(--cyan); }
+.controls__sort, .controls__select { cursor: pointer; flex-shrink: 0; }
+.controls__count {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: var(--dim-2);
+  margin: -6px 0 22px;
+}
 .controls__fav-toggle {
   font-family: var(--font-mono);
   font-size: 11.5px;
@@ -157,30 +166,7 @@ body {
 .controls__fav-toggle:hover { color: var(--white); border-color: var(--dim); }
 .controls__fav-toggle.is-active { background: var(--red); border-color: var(--red); color: var(--white); }
 
-/* Category ticker */
-.ticker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  padding: 0 24px 40px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.ticker__tab {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--dim);
-  padding: 8px 13px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.ticker__tab:hover { color: var(--white); border-color: var(--dim); }
-.ticker__tab.is-active { background: var(--red); border-color: var(--red); color: var(--white); font-weight: 700; }
-.ticker__tab:focus-visible, .tile:focus-visible .tile__frame, .btn-download:focus-visible, .modal__close:focus-visible {
+.tile:focus-visible .tile__frame, .btn-download:focus-visible, .modal__close:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
@@ -227,6 +213,38 @@ body {
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 1px, transparent 1px, transparent 3px);
   pointer-events: none;
 }
+
+/* VHS grain + tracking glitch — subtle tape grain at rest, a bright
+   distortion band sweeps through with flickering static on hover. */
+.tile__screen::before {
+  content: "";
+  position: absolute; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255,255,255,0) 48%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 52%),
+    var(--vhs-noise);
+  background-size: 100% 220%, 140px 140px;
+  background-position: 0 -120%, 0 0;
+  background-repeat: no-repeat, repeat;
+  mix-blend-mode: overlay;
+  opacity: 0.16;
+  transition: opacity 0.25s ease;
+}
+.tile:hover .tile__screen::before {
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  animation: vhs-glitch 2.2s linear infinite;
+}
+@keyframes vhs-glitch {
+  0%   { background-position: 0 -120%, 0 0; }
+  20%  { background-position: 0 -60%,  30px 10px; }
+  40%  { background-position: 0 10%,   -20px 50px; }
+  60%  { background-position: 0 90%,   45px -15px; }
+  80%  { background-position: 0 160%,  -35px 25px; }
+  100% { background-position: 0 220%,  0 0; }
+}
+
 /* Legend tiles get a slow, always-on wobble on the screen box —
    the thing that visibly sets top-rank moves apart at rest, not just
    the same hover feedback every other tile gets. */
@@ -287,6 +305,14 @@ body {
   font-size: 14px;
   letter-spacing: 0.01em;
   color: var(--white);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tile__wrestler {
+  margin: 3px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  color: var(--dim);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tile__rank { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; color: var(--dim); flex-shrink: 0; }
@@ -383,6 +409,28 @@ body {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 1px, transparent 1px, transparent 3px);
 }
+.modal__screen::before {
+  content: "";
+  position: absolute; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(255,255,255,0) 48%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 52%),
+    var(--vhs-noise);
+  background-size: 100% 220%, 140px 140px;
+  background-position: 0 -120%, 0 0;
+  background-repeat: no-repeat, repeat;
+  mix-blend-mode: overlay;
+  opacity: 0.16;
+  transition: opacity 0.25s ease;
+}
+/* A quick, more intense glitch burst plays once when Download is pressed —
+   the tape "kicking" as the clip gets pulled, then settling back down. */
+.modal__screen.is-glitching::before {
+  opacity: 0.75;
+  mix-blend-mode: screen;
+  animation: vhs-glitch 0.6s linear 1;
+}
 .modal__rec {
   position: absolute; top: 10px; left: 10px; z-index: 2;
   display: flex; align-items: center; gap: 5px;
@@ -402,6 +450,13 @@ body {
 .modal[data-rank="champion"] .modal__title { color: var(--red); }
 .modal__fav { flex-shrink: 0; background: none; border: none; color: var(--dim-2); font-size: 20px; cursor: pointer; transition: color 0.15s ease; }
 .modal__fav.is-active { color: var(--gold); }
+.modal__wrestler {
+  margin: 4px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--dim);
+}
 .modal__rank { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.05em; color: var(--dim); margin: 6px 0 14px; }
 .modal[data-rank="champion"] .modal__rank { color: var(--red); }
 .modal[data-rank="legend"] .modal__rank { color: var(--gold); }
@@ -471,7 +526,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .tile, .tile__frame, .tile[data-rank="legend"] .tile__screen, .btn-download, .modal__panel, .tile[data-rank="legend"] .tile__frame, .rarity-legend__swatch--legend {
+  .tile, .tile__frame, .tile[data-rank="legend"] .tile__screen, .btn-download, .modal__panel, .tile[data-rank="legend"] .tile__frame, .rarity-legend__swatch--legend, .tile__screen::before, .modal__screen::before {
     transition: none; animation: none;
   }
   .tile { opacity: 1; }
