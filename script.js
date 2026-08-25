@@ -245,6 +245,7 @@ async function renderGrid() {
       <div class="tile__frame">
         <div class="tile__screen">
           <video muted loop playsinline preload="metadata">${move.previewWebm ? `<source src="${move.previewWebm}" type="video/webm">` : ""}<source src="${move.preview}" type="video/mp4"></video>
+          <div class="tile__vhs-hover"></div>
           ${isRecent ? `<span class="tile__rec tile__rec--live">● NEW</span>` : ""}
           <img class="tile__portrait" src="${move.wrestlerImage}" alt="" />
           <button class="tile__fav ${isFav ? "is-active" : ""}" aria-pressed="${isFav}" aria-label="Toggle favorite">${isFav ? "★" : "☆"}</button>
