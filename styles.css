@@ -223,21 +223,21 @@ body {
 .tile__screen::before {
   content: "";
   position: absolute; inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
   background-image: var(--vhs-noise);
   mix-blend-mode: overlay;
 }
 .tile__vhs-hover {
   position: absolute; inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
   background-image: var(--vhs-static-gif);
   background-repeat: no-repeat;
   background-position-y: -20px;
   background-size: cover;
   mix-blend-mode: screen;
-  opacity: 0;
+  opacity: 64%;
   transition: opacity 0.15s ease;
 }
 .tile:hover .tile__vhs-hover { opacity: 0.84; }
