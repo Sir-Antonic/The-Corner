@@ -222,25 +222,28 @@ body {
    the flicker comes from the GIF's own frames, same as the reference. */
 .tile__screen::before {
   content: "";
+  display: flex;
   position: absolute; inset: 0;
-  z-index: 2;
-  pointer-events: none;
   background-image: var(--vhs-noise);
   mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 2;
 }
 .tile__vhs-hover {
+  content: "";
+  display: flex;
   position: absolute; inset: 0;
-  z-index: 2;
-  pointer-events: none;
   background-image: var(--vhs-static-gif);
+  translate: 0px 9px ;
   background-repeat: no-repeat;
   background-position-y: -20px;
   background-size: cover;
   mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 0.15s ease;
+  pointer-events: none;
+  opacity: 64%;
+  z-index: 2;
 }
-.tile:hover .tile__vhs-hover { opacity: 0.64; }
+.tile:hover .tile__vhs-hover { transition: all 0.2s ease-in-out; }
 
 /* Legend tiles get a slow, always-on wobble on the screen box —
    the thing that visibly sets top-rank moves apart at rest, not just
