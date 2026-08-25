@@ -225,6 +225,8 @@ body {
   display: flex;
   position: absolute; inset: 0;
   background-image: var(--vhs-noise);
+  height: 580px;
+  width: 960px;
   mix-blend-mode: overlay;
   pointer-events: none;
   z-index: 2;
@@ -234,7 +236,9 @@ body {
   display: flex;
   position: absolute; inset: 0;
   background-image: var(--vhs-static-gif);
-  translate: 0px 9px ;
+  height: 580px;
+  width: 960px;
+  translate: 0px 0px;
   background-repeat: no-repeat;
   background-position-y: -20px;
   background-size: cover;
