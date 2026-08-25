@@ -1,4 +1,5 @@
 :root {
+  --vhs-static-gif: url("assets/vhs-static.gif");
   --vhs-noise: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj4KPGZpbHRlciBpZD0ibiI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuODUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAxICAwIDAgMCAwIDEgIDAgMCAwIDAgMSAgMCAwIDAgMC41IDAiLz48L2ZpbHRlcj4KPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI24pIi8+Cjwvc3ZnPg==");
   --void: #050506;
   --panel: #0d0d10;
@@ -174,7 +175,7 @@ body {
 /* Grid + tiles */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(336px, 1fr));
   gap: 24px;
   max-width: 1180px;
   margin: 0 auto;
@@ -214,36 +215,32 @@ body {
   pointer-events: none;
 }
 
-/* VHS grain + tracking glitch — subtle tape grain at rest, a bright
-   distortion band sweeps through with flickering static on hover. */
+/* VHS effect — matches the reference exactly: a static noise texture
+   sits on the screen at all times via overlay blend, and hovering
+   reveals a real animated-GIF static/tracking-glitch texture blended
+   with screen mode at 64% opacity. No CSS keyframes drive the motion —
+   the flicker comes from the GIF's own frames, same as the reference. */
 .tile__screen::before {
   content: "";
   position: absolute; inset: 0;
   z-index: 2;
   pointer-events: none;
-  background:
-    linear-gradient(rgba(255,255,255,0) 48%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 52%),
-    var(--vhs-noise);
-  background-size: 100% 220%, 140px 140px;
-  background-position: 0 -120%, 0 0;
-  background-repeat: no-repeat, repeat;
+  background-image: var(--vhs-noise);
   mix-blend-mode: overlay;
-  opacity: 0.16;
-  transition: opacity 0.25s ease;
 }
-.tile:hover .tile__screen::before {
-  opacity: 0.55;
+.tile__vhs-hover {
+  position: absolute; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: var(--vhs-static-gif);
+  background-repeat: no-repeat;
+  background-position-y: -20px;
+  background-size: cover;
   mix-blend-mode: screen;
-  animation: vhs-glitch 2.2s linear infinite;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
-@keyframes vhs-glitch {
-  0%   { background-position: 0 -120%, 0 0; }
-  20%  { background-position: 0 -60%,  30px 10px; }
-  40%  { background-position: 0 10%,   -20px 50px; }
-  60%  { background-position: 0 90%,   45px -15px; }
-  80%  { background-position: 0 160%,  -35px 25px; }
-  100% { background-position: 0 220%,  0 0; }
-}
+.tile:hover .tile__vhs-hover { opacity: 0.64; }
 
 /* Legend tiles get a slow, always-on wobble on the screen box —
    the thing that visibly sets top-rank moves apart at rest, not just
@@ -259,13 +256,13 @@ body {
 }
 
 .tile__rec {
-  position: absolute; top: 8px; left: 8px; z-index: 3;
-  display: flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em;
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.06em;
   background: rgba(0,0,0,0.7); color: var(--white);
-  padding: 5px 9px; opacity: 0; transition: opacity 0.15s ease;
+  padding: 6px 11px; opacity: 0; transition: opacity 0.15s ease;
 }
-.tile__rec::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px rgba(232,35,47,0.9); }
+.tile__rec::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px rgba(232,35,47,0.9); }
 .tile:hover .tile__rec { opacity: 1; }
 .tile__rec--live {
   opacity: 1;
@@ -278,47 +275,47 @@ body {
 }
 
 .tile__portrait {
-  position: absolute; left: 8px; bottom: 8px; z-index: 3;
-  width: 40px; height: 40px;
+  position: absolute; left: 10px; bottom: 10px; z-index: 3;
+  width: 48px; height: 48px;
   object-fit: cover;
   border: 2px solid var(--accent, var(--white));
   background: #000;
 }
 .tile__fav {
-  position: absolute; top: 8px; right: 8px; z-index: 3;
-  width: 26px; height: 26px;
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  width: 31px; height: 31px;
   border: 1px solid rgba(255,255,255,0.2);
   background: rgba(0,0,0,0.6);
   color: var(--white);
-  font-size: 13px;
+  font-size: 16px;
   cursor: pointer;
   transition: color 0.15s ease, transform 0.15s ease;
 }
 .tile__fav:hover { transform: scale(1.1); }
 .tile__fav.is-active { color: var(--gold); }
 
-.tile__bar { background: var(--panel-2); padding: 10px 12px; border-top: 2px solid var(--border); }
+.tile__bar { background: var(--panel-2); padding: 12px 14px; border-top: 2px solid var(--border); }
 .tile:hover .tile__bar { border-top-color: var(--accent, var(--cyan)); }
 .tile__toprow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .tile__name {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 17px;
   letter-spacing: 0.01em;
   color: var(--white);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tile__wrestler {
-  margin: 3px 0 0;
+  margin: 4px 0 0;
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.03em;
   color: var(--dim);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.tile__rank { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.05em; color: var(--dim); flex-shrink: 0; }
+.tile__rank { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; color: var(--dim); flex-shrink: 0; }
 .tile__metarow {
   display: flex; align-items: center; justify-content: space-between;
-  margin-top: 6px; font-family: var(--font-mono); font-size: 10px;
+  margin-top: 8px; font-family: var(--font-mono); font-size: 12px;
 }
 .tile__type { color: var(--accent, var(--cyan)); text-transform: uppercase; letter-spacing: 0.04em; }
 .tile__stat { color: var(--dim); }
@@ -387,7 +384,7 @@ body {
 .modal__panel {
   position: relative;
   z-index: 1;
-  max-width: 480px;
+  max-width: 570px;
   margin: 6vh auto;
   background: var(--panel);
   border: 2px solid var(--accent, var(--cyan));
@@ -398,10 +395,10 @@ body {
 }
 @keyframes modal-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
 .modal__close {
-  position: absolute; top: 10px; right: 10px; z-index: 3;
-  width: 30px; height: 30px;
+  position: absolute; top: 12px; right: 12px; z-index: 3;
+  width: 36px; height: 36px;
   background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: var(--white);
-  cursor: pointer; font-size: 13px;
+  cursor: pointer; font-size: 15px;
 }
 .modal__screen { position: relative; aspect-ratio: 16 / 10; background: #000; }
 .modal__video { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -414,80 +411,83 @@ body {
   position: absolute; inset: 0;
   z-index: 2;
   pointer-events: none;
-  background:
-    linear-gradient(rgba(255,255,255,0) 48%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 52%),
-    var(--vhs-noise);
-  background-size: 100% 220%, 140px 140px;
-  background-position: 0 -120%, 0 0;
-  background-repeat: no-repeat, repeat;
+  background-image: var(--vhs-noise);
   mix-blend-mode: overlay;
-  opacity: 0.16;
-  transition: opacity 0.25s ease;
 }
-/* A quick, more intense glitch burst plays once when Download is pressed —
-   the tape "kicking" as the clip gets pulled, then settling back down. */
-.modal__screen.is-glitching::before {
-  opacity: 0.75;
+.modal__vhs-hover {
+  position: absolute; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: var(--vhs-static-gif);
+  background-repeat: no-repeat;
+  background-position-y: -20px;
+  background-size: cover;
   mix-blend-mode: screen;
-  animation: vhs-glitch 0.6s linear 1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+/* A quick glitch burst plays once when Download is pressed — the tape
+   "kicking" as the clip gets pulled, then settling back down. */
+.modal__screen.is-glitching .modal__vhs-hover {
+  opacity: 0.85;
 }
 .modal__rec {
-  position: absolute; top: 10px; left: 10px; z-index: 2;
-  display: flex; align-items: center; gap: 5px;
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em;
-  background: rgba(0,0,0,0.65); color: var(--white); padding: 4px 8px;
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  background: rgba(0,0,0,0.65); color: var(--white); padding: 5px 10px;
 }
-.modal__rec::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px rgba(232,35,47,0.9); }
+.modal__rec::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px rgba(232,35,47,0.9); }
 .modal__type {
-  position: absolute; left: 10px; bottom: 10px; z-index: 2;
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
-  background: var(--accent, var(--cyan)); color: #050505; padding: 4px 10px; font-weight: 700;
+  position: absolute; left: 12px; bottom: 12px; z-index: 2;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;
+  background: var(--accent, var(--cyan)); color: #050505; padding: 5px 12px; font-weight: 700;
 }
-.modal__body { padding: 20px; }
-.modal__titlerow { display: flex; align-items: center; gap: 10px; }
-.modal__title { font-family: var(--font-display); font-size: 21px; margin: 0; flex: 1; min-width: 0; color: var(--white); }
+.modal__body { padding: 24px; }
+.modal__titlerow { display: flex; align-items: center; gap: 12px; }
+.modal__title { font-family: var(--font-display); font-size: 25px; margin: 0; flex: 1; min-width: 0; color: var(--white); }
 .modal[data-rank="legend"] .modal__title { color: var(--gold); text-shadow: 0 0 8px rgba(255,204,51,0.5); }
 .modal[data-rank="champion"] .modal__title { color: var(--red); }
-.modal__fav { flex-shrink: 0; background: none; border: none; color: var(--dim-2); font-size: 20px; cursor: pointer; transition: color 0.15s ease; }
+.modal__fav { flex-shrink: 0; background: none; border: none; color: var(--dim-2); font-size: 24px; cursor: pointer; transition: color 0.15s ease; }
 .modal__fav.is-active { color: var(--gold); }
 .modal__wrestler {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.03em;
   color: var(--dim);
 }
-.modal__rank { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.05em; color: var(--dim); margin: 6px 0 14px; }
+.modal__rank { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.05em; color: var(--dim); margin: 7px 0 16px; }
 .modal[data-rank="champion"] .modal__rank { color: var(--red); }
 .modal[data-rank="legend"] .modal__rank { color: var(--gold); }
-.modal__notes { color: var(--dim); font-size: 14px; margin: 0 0 18px; font-weight: 500; }
+.modal__notes { color: var(--dim); font-size: 16px; margin: 0 0 20px; font-weight: 500; }
 .modal__footer {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 12px 0; margin-bottom: 14px;
-  font-family: var(--font-mono); font-size: 10.5px; color: var(--dim-2);
+  padding: 14px 0; margin-bottom: 16px;
+  font-family: var(--font-mono); font-size: 12.5px; color: var(--dim-2);
   border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
 }
-.modal__actions { display: flex; gap: 8px; }
+.modal__actions { display: flex; gap: 10px; }
 .btn-download {
   flex: 1;
   font-family: var(--font-display);
-  font-size: 12.5px;
+  font-size: 15px;
   letter-spacing: 0.02em;
   background: var(--red);
   color: var(--white);
   text-decoration: none;
-  padding: 14px 16px;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 17px 19px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 .btn-download:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.7); }
 .btn-download:active { transform: translate(0, 0); box-shadow: 2px 2px 0 rgba(0,0,0,0.6); }
-.btn-download__count { font-family: var(--font-mono); background: rgba(0,0,0,0.25); padding: 2px 8px; font-size: 11px; }
+.btn-download__count { font-family: var(--font-mono); background: rgba(0,0,0,0.25); padding: 3px 10px; font-size: 13px; }
 .btn-copy {
-  flex-shrink: 0; width: 46px;
+  flex-shrink: 0; width: 55px;
   border: 1px solid var(--border); background: var(--panel-2); color: var(--white);
-  font-size: 16px; cursor: pointer; transition: border-color 0.15s ease;
+  font-size: 19px; cursor: pointer; transition: border-color 0.15s ease;
 }
 .btn-copy:hover { border-color: var(--cyan); }
 
@@ -526,8 +526,11 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .tile, .tile__frame, .tile[data-rank="legend"] .tile__screen, .btn-download, .modal__panel, .tile[data-rank="legend"] .tile__frame, .rarity-legend__swatch--legend, .tile__screen::before, .modal__screen::before {
+  .tile, .tile__frame, .tile[data-rank="legend"] .tile__screen, .btn-download, .modal__panel, .tile[data-rank="legend"] .tile__frame, .rarity-legend__swatch--legend {
     transition: none; animation: none;
+  }
+  .tile:hover .tile__vhs-hover, .modal__screen.is-glitching .modal__vhs-hover {
+    opacity: 0 !important;
   }
   .tile { opacity: 1; }
 }
