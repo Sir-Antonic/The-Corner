@@ -237,10 +237,8 @@ body {
   background-position-y: -20px;
   background-size: cover;
   mix-blend-mode: screen;
-  opacity: 0;
-  transition: opacity 0.15s ease;
+  opacity: 0.84;
 }
-.tile:hover .tile__vhs-hover { opacity: 0.84; }
 
 /* Legend tiles get a slow, always-on wobble on the screen box —
    the thing that visibly sets top-rank moves apart at rest, not just
