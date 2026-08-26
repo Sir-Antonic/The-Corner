@@ -237,7 +237,7 @@ body {
   background-position-y: -20px;
   background-size: cover;
   mix-blend-mode: screen;
-  opacity: 64%;
+  opacity: 0;
   transition: opacity 0.15s ease;
 }
 .tile:hover .tile__vhs-hover { opacity: 0.84; }
