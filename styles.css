@@ -502,8 +502,5 @@ body {
   .tile, .tile__frame, .tile[data-rank="legend"] .tile__screen, .btn-download, .modal__panel, .tile[data-rank="legend"] .tile__frame, .rarity-legend__swatch--legend {
     transition: none; animation: none;
   }
-  .tile__vhs-hover {
-    opacity: 0 !important;
-  }
   .tile { opacity: 1; }
 }
