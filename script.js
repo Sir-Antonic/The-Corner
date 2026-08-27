@@ -382,15 +382,6 @@ async function openModal(move, { updateUrl = true } = {}) {
   });
 
   downloadBtn.onclick = async () => {
-    const screenEl = document.querySelector(".modal__screen");
-    if (screenEl) {
-      screenEl.classList.remove("is-glitching");
-      // force reflow so the animation restarts even if clicked again quickly
-      void screenEl.offsetWidth;
-      screenEl.classList.add("is-glitching");
-      setTimeout(() => screenEl.classList.remove("is-glitching"), 650);
-    }
-
     const newCount = await incrementCount(move.counterId);
     const tier = getRankTier(newCount);
     countEl.textContent = newCount;
