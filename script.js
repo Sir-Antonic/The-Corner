@@ -7,8 +7,9 @@ const FAVORITES_KEY = "move-hub-favorites";
 // Download thresholds that decide a tile's rank. Tune to your own numbers.
 const RANK_THRESHOLDS = { legend: 150, champion: 50, pro: 15 };
 const PAGE_SIZE = 12;
-// Only the single newest move (last entry in moves.json) shows the REC
-// indicator — every other post has none at all, not even on hover.
+// The N most recently added moves (last entries in moves.json) show the
+// REC indicator, all with the same live/blinking treatment — everything
+// older has none at all, not even on hover.
 const RECENT_REC_COUNT = 5;
 
 // Every category now shares one neutral accent color instead of a
@@ -229,7 +230,7 @@ async function renderGrid() {
   grid.innerHTML = "";
 
   pageItems.forEach((move, i) => {
-    const accent = getCategoryAccent(move.category);
+    const accent = getCategoryAccent();
     const isFav = favorites.has(move.id);
     const isRecent = isRecentMove(move.id);
     const tile = document.createElement("div");
@@ -246,7 +247,7 @@ async function renderGrid() {
         <div class="tile__screen">
           <video muted loop playsinline preload="metadata">${move.previewWebm ? `<source src="${move.previewWebm}" type="video/webm">` : ""}<source src="${move.preview}" type="video/mp4"></video>
           <div class="tile__vhs-hover"></div>
-          ${isRecent ? `<span class="tile__rec tile__rec--live">● NEW</span>` : ""}
+          ${isRecent ? `<span class="tile__rec">● NEW</span>` : ""}
           <img class="tile__portrait" src="${move.wrestlerImage}" alt="" />
           <button class="tile__fav ${isFav ? "is-active" : ""}" aria-pressed="${isFav}" aria-label="Toggle favorite">${isFav ? "★" : "☆"}</button>
         </div>
@@ -313,7 +314,7 @@ const modal = document.getElementById("move-modal");
 const modalVideo = document.getElementById("modal-video");
 
 async function openModal(move, { updateUrl = true } = {}) {
-  const accent = getCategoryAccent(move.category);
+  const accent = getCategoryAccent();
   modal.style.setProperty("--accent", accent);
   modal.dataset.moveId = move.id;
 
@@ -324,7 +325,6 @@ async function openModal(move, { updateUrl = true } = {}) {
   const modalRec = document.getElementById("modal-rec");
   const moveIsRecent = isRecentMove(move.id);
   modalRec.style.display = moveIsRecent ? "" : "none";
-  modalRec.classList.toggle("tile__rec--live", moveIsRecent);
   document.getElementById("modal-author").textContent = `BUILT BY ${move.author}`;
 
   const isFav = favorites.has(move.id);

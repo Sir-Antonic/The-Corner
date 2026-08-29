@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sir-antonic.github.io/The-Corner/sitemap.xml

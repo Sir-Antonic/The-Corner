@@ -258,15 +258,17 @@ body {
   display: flex; align-items: center; gap: 7px;
   font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.06em;
   background: rgba(0,0,0,0.7); color: var(--white);
-  padding: 6px 11px; opacity: 0; transition: opacity 0.15s ease;
-}
-.tile__rec::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px rgba(232,35,47,0.9); }
-.tile:hover .tile__rec { opacity: 1; }
-.tile__rec--live {
-  opacity: 1;
+  padding: 6px 11px;
   border: 1px solid rgba(232, 35, 47, 0.5);
 }
-.tile__rec--live::before { animation: rec-blink 2.2s ease-in-out infinite; }
+.tile__rec::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px rgba(232,35,47,0.9);
+  animation: rec-blink 2.2s ease-in-out infinite;
+}
 @keyframes rec-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.2; }
