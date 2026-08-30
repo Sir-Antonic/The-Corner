@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — THE CORNER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #050506;
+    --white: #f2f2ef;
+    --dim: #8a8d93;
+    --red: #e8232f;
+    --cyan: #29e0e8;
+    --border: #26262c;
+    --font-display: 'Russo One', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--void);
+    background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 3px);
+    box-shadow: inset 0 0 180px rgba(0,0,0,0.75);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .corner { position: fixed; width: 26px; height: 26px; opacity: 0.7; }
+  .corner::before, .corner::after { content: ""; position: absolute; background: var(--cyan); }
+  .corner::before { width: 100%; height: 2px; }
+  .corner::after { width: 2px; height: 100%; }
+  .corner.tl { top: 16px; left: 16px; }
+  .corner.tl::before, .corner.tl::after { top: 0; left: 0; }
+  .corner.tr { top: 16px; right: 16px; }
+  .corner.tr::before { top: 0; right: 0; }
+  .corner.tr::after { top: 0; right: 0; }
+  .corner.bl { bottom: 16px; left: 16px; }
+  .corner.bl::before { bottom: 0; left: 0; }
+  .corner.bl::after { bottom: 0; left: 0; }
+  .corner.br { bottom: 16px; right: 16px; }
+  .corner.br::before { bottom: 0; right: 0; }
+  .corner.br::after { bottom: 0; right: 0; }
+
+  .content { padding: 24px; max-width: 460px; }
+  .code {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 16vw, 8rem);
+    letter-spacing: 0.02em;
+    color: var(--white);
+    text-shadow: 4px 4px 0 var(--red), 8px 8px 0 rgba(0,0,0,0.6);
+    line-height: 1;
+    margin: 0;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    margin: 18px 0 8px;
+  }
+  p.msg {
+    color: var(--dim);
+    font-size: 16px;
+    margin: 0 0 34px;
+  }
+  a.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    background: var(--red);
+    color: var(--white);
+    text-decoration: none;
+    padding: 14px 24px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  a.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.7); }
+  a.btn:active { transform: translate(0, 0); box-shadow: 2px 2px 0 rgba(0,0,0,0.6); }
+</style>
+</head>
+<body>
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="content">
+    <p class="code">404</p>
+    <p class="eyebrow">// MOVE NOT FOUND</p>
+    <p class="msg">Whatever you were looking for isn't in the archive — or the link's out of date.</p>
+    <a class="btn" href="/The-Corner/">◂ BACK TO THE CORNER</a>
+  </div>
+</body>
+</html>

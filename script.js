@@ -33,6 +33,21 @@ try {
   favorites = new Set();
 }
 
+// Attaches video <source> elements only once a card is about to scroll
+// into view, instead of every card on the page fetching video metadata
+// upfront. rootMargin gives a 300px head start so playback is ready by
+// the time a card is actually visible.
+const lazyVideoObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target._loadSource?.();
+      lazyVideoObserver.unobserve(entry.target);
+    });
+  },
+  { rootMargin: "300px" }
+);
+
 // ---- COUNTER HELPERS ------------------------------------------------------
 function readLocalCounts() {
   try { return JSON.parse(localStorage.getItem(LOCAL_FALLBACK_KEY) || "{}"); }
@@ -245,7 +260,7 @@ async function renderGrid() {
     tile.innerHTML = `
       <div class="tile__frame">
         <div class="tile__screen">
-          <video muted loop playsinline preload="metadata">${move.previewWebm ? `<source src="${move.previewWebm}" type="video/webm">` : ""}<source src="${move.preview}" type="video/mp4"></video>
+          <video muted loop playsinline preload="none" data-src="${move.preview}" ${move.previewWebm ? `data-src-webm="${move.previewWebm}"` : ""}></video>
           <div class="tile__vhs-hover"></div>
           ${isRecent ? `<span class="tile__rec">● NEW</span>` : ""}
           <img class="tile__portrait" src="${move.wrestlerImage}" alt="" />
@@ -268,6 +283,28 @@ async function renderGrid() {
     const video = tile.querySelector("video");
     const favBtn = tile.querySelector(".tile__fav");
 
+    // Video sources aren't attached until the card is about to scroll into
+    // view — with pagination already capping how many cards render at once,
+    // this mainly saves bandwidth on cards further down a page the visitor
+    // hasn't scrolled to yet.
+    function loadVideoSource() {
+      if (video.dataset.loaded) return;
+      video.dataset.loaded = "true";
+      if (video.dataset.srcWebm) {
+        const webm = document.createElement("source");
+        webm.src = video.dataset.srcWebm;
+        webm.type = "video/webm";
+        video.appendChild(webm);
+      }
+      const mp4 = document.createElement("source");
+      mp4.src = video.dataset.src;
+      mp4.type = "video/mp4";
+      video.appendChild(mp4);
+      video.load();
+    }
+    video._loadSource = loadVideoSource;
+    lazyVideoObserver.observe(video);
+
     favBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       const nowFav = toggleFavorite(move.id);
@@ -283,9 +320,9 @@ async function renderGrid() {
       if (showFavoritesOnly && !nowFav) renderGrid();
     });
 
-    tile.addEventListener("mouseenter", () => video.play().catch(() => {}));
+    tile.addEventListener("mouseenter", () => { loadVideoSource(); video.play().catch(() => {}); });
     tile.addEventListener("mouseleave", () => { video.pause(); video.currentTime = 0; });
-    tile.addEventListener("focus", () => video.play().catch(() => {}));
+    tile.addEventListener("focus", () => { loadVideoSource(); video.play().catch(() => {}); });
     tile.addEventListener("blur", () => { video.pause(); video.currentTime = 0; });
     tile.addEventListener("click", () => openModal(move));
     tile.addEventListener("keydown", (e) => {
