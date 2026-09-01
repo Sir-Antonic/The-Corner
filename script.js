@@ -49,7 +49,7 @@ const lazyVideoObserver = new IntersectionObserver(
 
 // Dynamically load the CounterAPI v2 ES Module
 let counterInstance = null;
-const counterPromise = import('https://jsdelivr.net')
+const counterPromise = import('https://cdn.jsdelivr.net/npm/counterapi/dist/counter.esm.min.js')
   .then(module => {
     counterInstance = new module.Counter({
       workspace: COUNTER_WORKSPACE
