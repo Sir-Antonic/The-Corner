@@ -88,7 +88,7 @@ async function incrementCount(counterId) {
 
   if (!counterInstance || COUNTER_WORKSPACE === "your-workspace-slug") {
     const counts = readLocalCounts();
-    counts[counts.id] = (counts[counterId] || 0) + 1;
+    counts[counterId] = (counts[counterId] || 0) + 1;
     writeLocalCounts(counts);
     return counts[counterId];
   }
