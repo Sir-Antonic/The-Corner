@@ -1,6 +1,5 @@
 // ---- CONFIG -----------------------------------------------------------
-const COUNTER_NAMESPACE = "thecorner"; // <-- replace me, see README
-const COUNTER_API_BASE = "https://api.counterapi.dev/v1";
+const COUNTER_WORKSPACE = "thecorner"; // Your V2 Workspace Slug
 const LOCAL_FALLBACK_KEY = "move-hub-download-counts";
 const FAVORITES_KEY = "move-hub-favorites";
 
@@ -48,33 +47,55 @@ const lazyVideoObserver = new IntersectionObserver(
   { rootMargin: "300px" }
 );
 
-// ---- COUNTER HELPERS ------------------------------------------------------
+// Dynamically load the CounterAPI v2 ES Module
+let counterInstance = null;
+const counterPromise = import('https://jsdelivr.net')
+  .then(module => {
+    counterInstance = new module.Counter({
+      workspace: COUNTER_WORKSPACE
+    });
+  })
+  .catch(err => console.error("Failed to load CounterAPI:", err));
+
+// ---- LOCAL FALLBACK HELPER FUNCTIONS ----------------------------------
 function readLocalCounts() {
   try { return JSON.parse(localStorage.getItem(LOCAL_FALLBACK_KEY) || "{}"); }
   catch { return {}; }
 }
+
 function writeLocalCounts(counts) {
   localStorage.setItem(LOCAL_FALLBACK_KEY, JSON.stringify(counts));
 }
+
+// ---- CORE API FUNCTIONS (V2 MIGRATED) ---------------------------------
 async function fetchCount(counterId) {
-  if (COUNTER_NAMESPACE === "your-workspace-slug") return readLocalCounts()[counterId] || 0;
+  await counterPromise; // Ensure the SDK is loaded
+  
+  if (!counterInstance || COUNTER_WORKSPACE === "your-workspace-slug") {
+    return readLocalCounts()[counterId] || 0;
+  }
+  
   try {
-    const res = await fetch(`${COUNTER_API_BASE}/${COUNTER_NAMESPACE}/${counterId}`);
-    const data = await res.json();
-    return data.count ?? 0;
-  } catch { return readLocalCounts()[counterId] || 0; }
+    const result = await counterInstance.get(counterId);
+    return result.value ?? 0;
+  } catch { 
+    return readLocalCounts()[counterId] || 0; 
+  }
 }
+
 async function incrementCount(counterId) {
-  if (COUNTER_NAMESPACE === "your-workspace-slug") {
+  await counterPromise; // Ensure the SDK is loaded
+
+  if (!counterInstance || COUNTER_WORKSPACE === "your-workspace-slug") {
     const counts = readLocalCounts();
-    counts[counterId] = (counts[counterId] || 0) + 1;
+    counts[counts.id] = (counts[counterId] || 0) + 1;
     writeLocalCounts(counts);
     return counts[counterId];
   }
+  
   try {
-    const res = await fetch(`${COUNTER_API_BASE}/${COUNTER_NAMESPACE}/${counterId}/up`);
-    const data = await res.json();
-    return data.count ?? 0;
+    const result = await counterInstance.up(counterId);
+    return result.value ?? 0;
   } catch {
     const counts = readLocalCounts();
     counts[counterId] = (counts[counterId] || 0) + 1;
